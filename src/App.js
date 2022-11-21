@@ -2,34 +2,28 @@ import logo from './logo.svg';
 import './App.css';
 import { Component } from 'react';
 
-// state
-class Timer extends Component {
+class Toggle extends Component {
   constructor(props) {
-    super(props)
+    super(props) 
     this.state = {
-      time : props.start
+      toggleStatus: true
     }
+
+    this.handleClick = this.handleClick.bind(this)
   }
 
-  // lifeCycle
-  componentDidMount() {
-    this.addInteval = setInterval(()=>this.increase(), 1000)
-  }
-
-  componentWillUnmount(){
-    clearInterval(this.addInteval)
-  }
-
-  increase() {
-    // update state time setiap detik
-    this.setState((state, props)=> ({
-      time: parseInt(state.time) + 1
+  handleClick() {
+    this.setState(state => ({
+      toggleStatus: !state.toggleStatus
     }))
   }
 
   render() {
     return (
-      <div>{this.state.time} Detik</div>
+      <button onClick={this.handleClick}>
+        {this.state.toggleStatus ? "ON" : "OFF"}
+        <p>Kondisi sekarang {this.state.toggleStatus ? "menyala" : "mati"}</p>
+      </button>
     )
   }
 }
@@ -37,10 +31,9 @@ class Timer extends Component {
 function App() {
   return (
     <div className="App">
+      <Toggle/>
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <Timer start="0"/>
-        <Timer start="5"/>
       </header>
     </div>
   );
