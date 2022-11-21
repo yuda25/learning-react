@@ -1,42 +1,45 @@
-import logo from './logo.svg';
 import './App.css';
 import { Component } from 'react';
+import List from './List';
 
-class Toggle extends Component {
+
+class App extends Component {
+
   constructor(props) {
-    super(props) 
+    super(props)
     this.state = {
-      toggleStatus: true
+      todoItem: "",
+      items: []
     }
-
-    this.handleClick = this.handleClick.bind(this)
   }
 
-  handleClick() {
-    this.setState(state => ({
-      toggleStatus: !state.toggleStatus
-    }))
+  handleSubmit = (event) => {
+    event.preventDefault()
+    this.setState({
+      items: [...this.state.items, this.state.todoItem],
+      todoItem: ""
+
+    })
+  }
+
+  handleChange = (event) => {
+    this.setState({
+      todoItem: event.target.value
+    })
   }
 
   render() {
     return (
-      <button onClick={this.handleClick}>
-        {this.state.toggleStatus ? "ON" : "OFF"}
-        <p>Kondisi sekarang {this.state.toggleStatus ? "menyala" : "mati"}</p>
-      </button>
-    )
-  }
-}
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <input value={this.state.todoItem} onChange={this.handleChange}/>
+          <button>Add</button>
+        </form>
 
-function App() {
-  return (
-    <div className="App">
-      <Toggle/>
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-      </header>
-    </div>
-  );
+        <List items = {this.state.items} />
+      </div>
+    );
+  }
 }
 
 export default App;
