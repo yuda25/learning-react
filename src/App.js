@@ -1,22 +1,46 @@
 import logo from './logo.svg';
 import './App.css';
+import { Component } from 'react';
 
-function Biodata(props) {
-  return <span>umur lu {props.age}</span>
+// state
+class Timer extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      time : props.start
+    }
+  }
+
+  // lifeCycle
+  componentDidMount() {
+    this.addInteval = setInterval(()=>this.increase(), 1000)
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.addInteval)
+  }
+
+  increase() {
+    // update state time setiap detik
+    this.setState((state, props)=> ({
+      time: parseInt(state.time) + 1
+    }))
+  }
+
+  render() {
+    return (
+      <div>{this.state.time} Detik</div>
+    )
+  }
 }
 
-function Greating(props) {
-  return <h1>Hello {props.name} - <Biodata age={props.age}/></h1>
-}
-
-
-
-function App(){
+function App() {
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <Greating name="Yuda" age="25"/>
+        <Timer start="0"/>
+        <Timer start="5"/>
       </header>
     </div>
   );
