@@ -1,45 +1,35 @@
 import './App.css';
 import { Component } from 'react';
-import List from './List';
 
 
 class App extends Component {
-
   constructor(props) {
     super(props)
     this.state = {
-      todoItem: "",
       items: []
     }
   }
 
-  handleSubmit = (event) => {
-    event.preventDefault()
-    this.setState({
-      items: [...this.state.items, this.state.todoItem],
-      todoItem: ""
-
-    })
-  }
-
-  handleChange = (event) => {
-    this.setState({
-      todoItem: event.target.value
-    })
+  componentDidMount() {
+    fetch("https://jsonplaceholder.typicode.com/users")
+    .then(response => response.json())
+    .then(data => this.setState({items : data}))
   }
 
   render() {
+    const { items } = this.state
     return (
       <div>
-        <form onSubmit={this.handleSubmit}>
-          <input value={this.state.todoItem} onChange={this.handleChange}/>
-          <button>Add</button>
-        </form>
-
-        <List items = {this.state.items} />
+        <ul>
+            {
+              items.map((item, index)=> 
+              <li key={index}>{item.name}</li>)
+            }
+        </ul>
       </div>
-    );
+    )
   }
+  
 }
 
 export default App;
