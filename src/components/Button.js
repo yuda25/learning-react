@@ -1,7 +1,7 @@
-const Button = () => {
+const Button = (props) => {
     return (
         <div>
-            <button>klik aja</button>
+            <button onClick={() => props.clicked()}>klik aja</button>
         </div>
     )
 }
