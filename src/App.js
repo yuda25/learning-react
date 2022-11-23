@@ -1,34 +1,20 @@
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
-import Button from './components/Button';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import NavigationBar from './components/NavigationBar';
 
 function App(){
-  const navHeading = "Navigation Bar";
-  const navText = "test props";
 
-  const clicked = () => {
-    return alert("button sudah u pencet");
-  }
+  const [Navbar, setNavbar] = useState("");
 
-  const paragraf = () => {
-    return (
-      <div>
-        <i>PT.KYM</i>
-        <marquee>hai hai hai</marquee>
-      </div>
-    )
+  const changeNavbar = () => {
+    setNavbar("My Contact");
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <Navbar navText={navText} navHeading={navHeading}/>
-        <img src={logo} className="App-logo" alt="logo" />
-        <Button clicked={clicked}/>
-        <Footer paragraf={paragraf}/>
-      </header>
+    <div>
+        <NavigationBar navValue={Navbar}/>
+        <h1>INI HOMEAGE</h1>
+        <button onClick={() => changeNavbar()}>Ubah Navigasi</button>
     </div>
   );
 }
