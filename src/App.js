@@ -1,20 +1,25 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
-import NavigationBar from './components/NavigationBar';
 
 function App(){
 
-  const [Navbar, setNavbar] = useState("");
+const [PacarSaya, setPacarSaya] = useState(0);
+const [NamaPacar, setNamaPacar] = useState("");
 
-  const changeNavbar = () => {
-    setNavbar("My Contact");
+useEffect(() => {
+  if(PacarSaya > 1) {
+    setNamaPacar("Yanto Supriyadi(BOYO)");
+  } else {
+    setNamaPacar("Yanti(SETIA)")
   }
+},[PacarSaya])
 
   return (
     <div>
-        <NavigationBar navValue={Navbar}/>
-        <h1>INI HOMEAGE</h1>
-        <button onClick={() => changeNavbar()}>Ubah Navigasi</button>
+        <h5>Nama pacar : {NamaPacar}</h5>
+        <h1>Saya punya {PacarSaya} pacar</h1>
+        <button onClick={() => setPacarSaya((pref) => pref + 1)}>Tambah Pacar</button>
+        <button onClick={() => setPacarSaya((pref) => pref - 1)}>Putuskan Pacar</button>
     </div>
   );
 }
