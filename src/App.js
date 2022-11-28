@@ -1,18 +1,18 @@
 import './App.css';
-import Navbar from './components/navbar';
-import HomeContent from './contents/homeContent';
-import About from './contents/About';
-import Gallery from './contents/gallery';
-import Contact from './contents/contact';
+import ConfigRoutes from './configRoutes';
 
 function App() {
   return (
     <div>
-      <Navbar />
-      <HomeContent />
-      <About />
-      <Gallery />
-      <Contact />
+      {/* <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path='landingPage' element={< LandingPage/>}/>
+          <Route path='/' element={< Navigate to={'landingPage'}/>}/>
+          <Route path='manageUsers' element={< ManageUsers/>}/>
+        </Routes>
+      </BrowserRouter> */}
+      <ConfigRoutes />
     </div>
   )
 }

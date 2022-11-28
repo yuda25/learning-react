@@ -18,23 +18,23 @@ class Contact extends React.Component {
                         <p className="ml-2 font-medium font-serif">KYM CODING</p>
                     </div>
                     <div className="md:flex">
-                        <a href="https://www.facebook.com/kusuma.yuda.750" target="_blank" className="flex mx-1 lg:mx-2">
+                        <a href="https://www.facebook.com/kusuma.yuda.750" className="flex mx-1 lg:mx-2">
                             <MdFacebook size={28} />
                             <p className="mx-1 text-lg">Facebook</p>
                         </a>
-                        <a href="https://github.com/yuda25" target="_blank" className="flex mx-1 lg:mx-2">
+                        <a href="https://github.com/yuda25" className="flex mx-1 lg:mx-2">
                             <SiGithub size={28} />
                             <p className="mx-1 text-lg">GitHub</p>
                         </a>
-                        <a href="https://gitlab.com/yuda25" target="_blank" className="flex mx-1 lg:mx-2">
+                        <a href="https://gitlab.com/yuda25" className="flex mx-1 lg:mx-2">
                             <RiGitlabLine size={28} />
                             <p className="mx-1 text-lg">gitLab</p>
                         </a>
-                        <a href="https://wa.me/628980249767" target="_blank" className="flex mx-1 lg:mx-2">
+                        <a href="https://wa.me/628980249767" className="flex mx-1 lg:mx-2">
                             <ImWhatsapp size={28} />
                             <p className="mx-1 text-lg">Whatsapp</p>
                         </a>
-                        <a href="https://www.instagram.com/ksm.yudaa_/" target="_blank" className="flex mx-1 lg:mx-2">
+                        <a href="https://www.instagram.com/ksm.yudaa_/" className="flex mx-1 lg:mx-2">
                             <GrInstagram size={28} />
                             <p className="mx-1 text-lg">Instagram</p>
                         </a>
