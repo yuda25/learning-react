@@ -1,0 +1,25 @@
+{
+  "users": [
+    {
+      "name": "kusuma yuda",
+      "email": "yuda@gmail.com",
+      "whatsapp": "08980249767",
+      "address": "sukorejo city",
+      "id": 1
+    },
+    {
+      "name": "zanuk basyar",
+      "email": "zanuk@yahoo.com",
+      "whatsapp": "0812345678",
+      "address": "jepara",
+      "id": 2
+    },
+    {
+      "id": 4,
+      "name": "ferdi  pki banget",
+      "email": "marzuki@gmail.com",
+      "whatsapp": "08123456789",
+      "address": "jepara city"
+    }
+  ]
+}
