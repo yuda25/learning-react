@@ -9,6 +9,14 @@ import Swal from "sweetalert2";
 
 const ManageUsers = () => {
 
+
+    const [CurrentPage, setCurrentPage] = useState(1);
+    const [UsersPerPage, setUsersPerPage] = useState(10);
+
+    const [PageNumberLimit, setPageNumberLimit] = useState(5);
+    const [MaxPageNumberLimit, setMaxPageNumberLimit] = useState(5);
+    const [MinPageNumberLimit, setMinPageNumberLimit] = useState(0);
+
     const [Users, setUsers] = useState([{}]);
     const [showModal, setShowModal] = React.useState(false);
     const [showModalU, setShowModalU] = React.useState(false);
@@ -46,13 +54,13 @@ const ManageUsers = () => {
                     'success'
                 )
             })
-            getUsers()
+        getUsers()
     }
 
     const handleAddUser = async (e) => {
         const response = await axios.post("http://localhost:3001/users", AddUser);
 
-        if(response) {
+        if (response) {
             Swal.fire(
                 'Congratulations',
                 'data has been added',
@@ -75,15 +83,44 @@ const ManageUsers = () => {
 
     const handleUpdateUser = async () => {
         await axios.put(`http://localhost:3001/users/${UpdateUser.id}`, UpdateUser)
-        .then((res) => 
-        Swal.fire(
-            'Congratulations',
-            'data has been updated',
-            'success'
-          )
-        )
+            .then((res) =>
+                Swal.fire(
+                    'Congratulations',
+                    'data has been updated',
+                    'success'
+                )
+            )
         getUsers()
         setShowModalU(false)
+    }
+
+    // pagination
+    const indexOfLastUser = CurrentPage * UsersPerPage;
+    const indexOfFirstUser = indexOfLastUser - UsersPerPage;
+    const currentUsers = Users.slice(indexOfFirstUser, indexOfLastUser);
+    const paginate = pageNumber => setCurrentPage(pageNumber)
+
+    const handleNext = () => {
+        setCurrentPage(CurrentPage + 1);
+
+        if(CurrentPage + 1 > MaxPageNumberLimit) {
+            setMaxPageNumberLimit(MaxPageNumberLimit + PageNumberLimit)
+            setMinPageNumberLimit(MinPageNumberLimit + PageNumberLimit)
+        }
+    }
+
+    const handlePref = () => {
+        setCurrentPage(CurrentPage - 1);
+
+        if((CurrentPage - 1) % PageNumberLimit === 0) {
+            setMaxPageNumberLimit(MaxPageNumberLimit - PageNumberLimit)
+            setMinPageNumberLimit(MinPageNumberLimit - PageNumberLimit)
+        }
+    }
+
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(Users.length / UsersPerPage); i++) {
+        pageNumbers.push(i);
     }
 
     return (
@@ -117,7 +154,7 @@ const ManageUsers = () => {
                     </thead>
                     <tbody>
                         {
-                            Users.map((usersData) => {
+                            currentUsers.map((usersData) => {
                                 return (
                                     <tr className="bg-white border-b">
                                         <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
@@ -133,7 +170,7 @@ const ManageUsers = () => {
                                             {usersData.address}
                                         </td>
                                         <td className="py-4 px-6 justify-start flex">
-                                            <button onClick={() => setUpdateUser({id: usersData.id, name: usersData.name, email: usersData.email, whatsapp: usersData.whatsapp, address: usersData.address})}><button onClick={() => setShowModalU(true)} className="pr-6" style={{ fontSize: "20px", color: "green" }}><FiEdit /></button></button>
+                                            <button onClick={() => setUpdateUser({ id: usersData.id, name: usersData.name, email: usersData.email, whatsapp: usersData.whatsapp, address: usersData.address })}><button onClick={() => setShowModalU(true)} className="pr-6" style={{ fontSize: "20px", color: "green" }}><FiEdit /></button></button>
                                             <button onClick={() => handleDelete(usersData.id)} className="pl-6" style={{ fontSize: "20px", color: "red" }}><RiDeleteBinLine /></button>
                                         </td>
                                     </tr>
@@ -143,6 +180,29 @@ const ManageUsers = () => {
                     </tbody>
                 </table>
             </div>
+
+            {/* paginate */}
+            <nav aria-label="Page navigation example" className="pt-10 justify-center flex">
+                <ul className="inline-flex -space-x-px">
+                    <li>
+                        <button disabled={CurrentPage === pageNumbers[0] ? true : false} onClick={handlePref} className="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 ">Prev</button>
+                    </li>
+                    {pageNumbers.map((number) => {
+                        if (number < MaxPageNumberLimit + 1 && number > MinPageNumberLimit) {
+                            return (
+                                <li key={number} id={number} className={CurrentPage === number ? "text-gray-200 bg-gray-500" : "text-gray-500 bg-white"}>
+                                    <button onClick={() => paginate(number)} className="px-3 py-2 leading-tight border border-gray-300 hover:bg-gray-100 hover:text-gray-700 ">{number}</button>
+                                </li>
+                            )
+                        } else {
+                            return null
+                        }
+                    })}
+                    <li>
+                        <button disabled={CurrentPage === pageNumbers[pageNumbers.length - 1] ? true : false} onClick={handleNext} className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 ">Next</button>
+                    </li>
+                </ul>
+            </nav>
 
 
             {/* add user modal */}
@@ -280,6 +340,8 @@ const ManageUsers = () => {
                     </>
                 ) : null}
             </div>
+
+
         </div>
     )
 }
