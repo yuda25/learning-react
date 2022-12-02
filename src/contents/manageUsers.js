@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 
 const ManageUsers = () => {
 
+    const [Search, setSearch] = useState([]);
 
     const [CurrentPage, setCurrentPage] = useState(1);
     const [UsersPerPage, setUsersPerPage] = useState(10);
@@ -36,14 +37,17 @@ const ManageUsers = () => {
 
     useEffect(() => {
         getUsers()
+            .then((res) => {
+                setUsers(res.data)
+                setSearch(res.data)
+            })
     }, []);
 
     const getUsers = async () => {
-        await axios.get("http://localhost:3001/users")
-            .then((res) => {
-                setUsers(res.data)
-            })
+        const get = await axios.get("http://localhost:3001/users")
+            return get
     }
+
 
     const handleDelete = async (id) => {
         await axios.delete("http://localhost:3001/users/" + id)
@@ -97,13 +101,13 @@ const ManageUsers = () => {
     // pagination
     const indexOfLastUser = CurrentPage * UsersPerPage;
     const indexOfFirstUser = indexOfLastUser - UsersPerPage;
-    const currentUsers = Users.slice(indexOfFirstUser, indexOfLastUser);
+    const currentUsers = Search.slice(indexOfFirstUser, indexOfLastUser);
     const paginate = pageNumber => setCurrentPage(pageNumber)
 
     const handleNext = () => {
         setCurrentPage(CurrentPage + 1);
 
-        if(CurrentPage + 1 > MaxPageNumberLimit) {
+        if (CurrentPage + 1 > MaxPageNumberLimit) {
             setMaxPageNumberLimit(MaxPageNumberLimit + PageNumberLimit)
             setMinPageNumberLimit(MinPageNumberLimit + PageNumberLimit)
         }
@@ -112,7 +116,7 @@ const ManageUsers = () => {
     const handlePref = () => {
         setCurrentPage(CurrentPage - 1);
 
-        if((CurrentPage - 1) % PageNumberLimit === 0) {
+        if ((CurrentPage - 1) % PageNumberLimit === 0) {
             setMaxPageNumberLimit(MaxPageNumberLimit - PageNumberLimit)
             setMinPageNumberLimit(MinPageNumberLimit - PageNumberLimit)
         }
@@ -123,12 +127,64 @@ const ManageUsers = () => {
         pageNumbers.push(i);
     }
 
+    const searchUser = async (query) => {
+        const user = await axios.get(`http://localhost:3001/users?name_like=${query}`)
+        return user
+    }
+
+    const handleSearch = (query) => {
+        if (query !== null) {
+            searchUser(query)
+                .then((result) => setSearch(result.data))
+                .catch((err) => console.log(err))
+        } else {
+            getUsers()
+        }
+    };
+
+    const GetAllUsers = () => {
+        return currentUsers.map((usersData, index) => (
+                <tr key={index} className="bg-white border-b">
+                    <th className="hidden" key={usersData.id} />
+                    <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
+                        {usersData.name}
+                    </th>
+                    <td className="py-4 px-6">
+                        {usersData.email}
+                    </td>
+                    <td className="py-4 px-6">
+                        {usersData.whatsapp}
+                    </td>
+                    <td className="py-4 px-6">
+                        {usersData.address}
+                    </td>
+                    <td className="py-4 px-6 justify-start flex">
+                        <button onClick={() => setUpdateUser({ id: usersData.id, name: usersData.name, email: usersData.email, whatsapp: usersData.whatsapp, address: usersData.address })}><button onClick={() => setShowModalU(true)} className="pr-6" style={{ fontSize: "20px", color: "green" }}><FiEdit /></button></button>
+                        <button onClick={() => handleDelete(usersData.id)} className="pl-6" style={{ fontSize: "20px", color: "red" }}><RiDeleteBinLine /></button>
+                    </td>
+                </tr>
+        ))
+    }
+
     return (
 
         <div className="container mx-auto items-center pb-2 pt-20 lg:pt-28">
             <div className="justify-between flex border-b-2">
                 <h1 className="font-semibold" style={{ fontSize: "20px" }}>Manage Users</h1>
-                <button className="font-semibold" onClick={() => setShowModal(true)} style={{ fontSize: "25px" }}>{<BiAddToQueue />}</button>
+                <div className="justify-between flex">
+
+                    <form className="flex items-center">
+                        <label for="simple-search" className="sr-only">Search</label>
+                        <div className="relative w-full">
+                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg aria-hidden="true" className="w-5 h-5 text-gray-500"><path d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"></path></svg>
+                            </div>
+                            <input type="text" onChange={(e) => handleSearch(e.target.value)} id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Search" required />
+                        </div>
+                    </form>
+
+                    <button className="font-semibold" onClick={() => setShowModal(true)} style={{ fontSize: "25px" }}>{<BiAddToQueue />}</button>
+                </div>
             </div>
 
             <div className="overflow-x-auto relative shadow-md mt-4">
@@ -153,30 +209,7 @@ const ManageUsers = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {
-                            currentUsers.map((usersData) => {
-                                return (
-                                    <tr className="bg-white border-b">
-                                        <th scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap">
-                                            {usersData.name}
-                                        </th>
-                                        <td className="py-4 px-6">
-                                            {usersData.email}
-                                        </td>
-                                        <td className="py-4 px-6">
-                                            {usersData.whatsapp}
-                                        </td>
-                                        <td className="py-4 px-6">
-                                            {usersData.address}
-                                        </td>
-                                        <td className="py-4 px-6 justify-start flex">
-                                            <button onClick={() => setUpdateUser({ id: usersData.id, name: usersData.name, email: usersData.email, whatsapp: usersData.whatsapp, address: usersData.address })}><button onClick={() => setShowModalU(true)} className="pr-6" style={{ fontSize: "20px", color: "green" }}><FiEdit /></button></button>
-                                            <button onClick={() => handleDelete(usersData.id)} className="pl-6" style={{ fontSize: "20px", color: "red" }}><RiDeleteBinLine /></button>
-                                        </td>
-                                    </tr>
-                                )
-                            })
-                        }
+                        <GetAllUsers />
                     </tbody>
                 </table>
             </div>
